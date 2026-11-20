@@ -98,7 +98,7 @@ echo "Fakulteta od $num je: $rezultat"
 
 ---
 
-# **Dodatne vaje (za višji nivo)**
+# **Dodatne vaje**
 
 ## **Dodatna vaja 1: Najdite največje vneseno število**
 
@@ -106,6 +106,36 @@ echo "Fakulteta od $num je: $rezultat"
    - sprejema števila, dokler uporabnik ne vnese `stop`
    - shrani največje vneseno število
    - izpiše rezultat
+
+<details>
+<summary>Rešitev</summary>
+
+```bash
+#!/bin/bash
+
+max=""
+
+echo "Vnašaj števila (stop za konec):"
+
+while true
+do
+    read num
+    if [ "$num" = "stop" ]; then
+        break
+    fi
+    if [ -z "$max" ] || [ "$num" -gt "$max" ]; then
+        max=$num
+    fi
+done
+
+if [ -n "$max" ]; then
+    echo "Največje število: $max"
+else
+    echo "Ni vnešenih števil."
+fi
+```
+
+</details>
 
 ---
 
@@ -117,6 +147,29 @@ Ustvarite skripto, ki:
 - vpraša uporabnika za iskano besedo
 - izpiše, kolikokrat se beseda pojavi v datoteki (grep + wc)
 
+<details>
+<summary>Rešitev</summary>
+
+```bash
+#!/bin/bash
+
+echo "Vnesi ime datoteke:"
+read file
+
+echo "Vnesi iskano besedo:"
+read word
+
+if [ ! -f "$file" ]; then
+    echo "Datoteka ne obstaja."
+    exit 1
+fi
+
+count=$(grep -o -w "$word" "$file" | wc -l)
+echo "Beseda '$word' se pojavi $count-krat."
+```
+
+</details>
+
 ---
 
 ## **Dodatna vaja 3: Izpis vseh datotek z ekstenzijo**
@@ -125,6 +178,20 @@ Ustvarite skripto, ki:
 
 - prebere ekstenzijo (npr. txt)
 - izpiše vse datoteke s to končnico v trenutni mapi (find)
+
+<details>
+<summary>Rešitev</summary>
+
+```bash
+#!/bin/bash
+
+echo "Vnesi ekstenzijo (npr. txt):"
+read ext
+
+find . -maxdepth 1 -type f -name "*.$ext"
+```
+
+</details>
 
 ---
 
@@ -141,5 +208,48 @@ Ustvarite skripto z menijem:
 ```
 
 Skripta naj omogoča več izvajanj, dokler uporabnik ne izbere `0`.
+
+<details>
+<summary>Rešitev</summary>
+
+```bash
+#!/bin/bash
+
+while true
+do
+    echo "1 – seštevanje"
+    echo "2 – odštevanje"
+    echo "3 – množenje"
+    echo "4 – deljenje"
+    echo "0 – izhod"
+    read izbira
+
+    if [ "$izbira" = "0" ]; then
+        echo "Izhod."
+        break
+    fi
+
+    echo "Vnesi prvo število:"
+    read a
+    echo "Vnesi drugo število:"
+    read b
+
+    case $izbira in
+        1) echo "Rezultat: $((a + b))" ;;
+        2) echo "Rezultat: $((a - b))" ;;
+        3) echo "Rezultat: $((a * b))" ;;
+        4)
+            if [ "$b" -eq 0 ]; then
+                echo "Deljenje z 0 ni dovoljeno."
+            else
+                echo "Rezultat: $((a / b))"
+            fi
+            ;;
+        *) echo "Neveljavna izbira." ;;
+    esac
+done
+```
+
+</details>
 
 ---
